@@ -1,0 +1,11 @@
+ROOT_DIR = "E:/research/pannuke"
+DATA_DIR = "data"
+TRAIN_IMAGES = "Fold 1/Images/Imgs"
+TRAIN_MASKS = "Fold 1/Masks/Msks"
+VALID_IMAGES = "Fold 2/Images/Imgs"
+VALID_MASKS = "Fold 2/Masks/Msks"
+TEST_IMAGES = "Fold 3/Images/Imgs"
+TEST_MASKS = "Fold 3/Masks/Msks"
+BATCH_SIZE = 4
+NUMBER_EPOCHS = 100
+NUM_BLOCKS = 6
