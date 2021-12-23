@@ -7,6 +7,8 @@ from config import *
 import matplotlib.pyplot as plt
 import numpy as np
 from model import FANet
+from deeplab import DeeplabV3Plus
+from keras_unet_collection import models, utils
 from losses import Loss
 
 def main():
@@ -27,8 +29,8 @@ def main():
                         # crop_percent = 0.8,
                         palette = [[255, 255, 255], [83, 63, 207], [102, 115, 98], [232, 20, 85], [133, 138, 84], [247, 163, 84]],
                         channels = (3, 3),
-                        augment = True,
-                        compose = True,
+                        augment = False,
+                        compose = False,
                         seed = 47)
                         
     # Parse the images and masks, and return the data in batches, augmented optionally.
@@ -46,7 +48,7 @@ def main():
                         seed = 47)
                         
     # Parse the images and masks, and return the data in batches, augmented optionally.
-    valDS = validDS.data_batch(batch_size = BATCH_SIZE, shuffle = False)
+    validDS = validDS.data_batch(batch_size = BATCH_SIZE, shuffle = False)
     
     # Initialize the dataloader object
     testDS = DataLoader(image_paths = test_image_paths,
@@ -62,11 +64,20 @@ def main():
     # Parse the images and masks, and return the data in batches, augmented optionally.
     testDS = testDS.data_batch(batch_size = BATCH_SIZE, shuffle = False)
     print("[Info] Train Dataset: ", trainDS)
-    print("[Info] Valid Dataset: ", valDS)
+    print("[Info] Valid Dataset: ", validDS)
     print("[Info] Test Dataset: ", testDS)
 
     # model building
-    model = FANet.build(width = 256, height = 256, channel = 3, classes=6)
+    #model = FANet.build(width = 256, height = 256, channel = 3, classes=6)
+    #model = DeeplabV3Plus(image_size=256, num_classes=6)
+    model = models.att_unet_2d((256, 256, 3), filter_num=[64, 128, 256, 512, 1024], n_labels=6, 
+                           stack_num_down=2, stack_num_up=2, activation='ReLU', 
+                           atten_activation='ReLU', attention='add', output_activation='Softmax', 
+                           batch_norm=True, pool=False, unpool=False, 
+                           backbone='VGG16', weights='imagenet', 
+                           freeze_backbone=False, freeze_batch_norm=True, 
+                           name='attunet')
+
     print("[Info] Model Summary: \n")
     print(model.summary())
 
