@@ -67,7 +67,7 @@ class Loss:
         for i in range(6):
             loss = self.PanopticLoss(y_true[:,:,:,i], y_pred[:,:,:,i])
             losses.append(loss)
-        return tf.experimental.numpy.nanmean(losses)
+        return tf.experimental.numpy.mean(losses)
     
     def slicesPanopticScore(self, y_true, y_pred):
         return 1 - self.slicesPanopticLoss(y_true, y_pred)
